@@ -1,0 +1,190 @@
+.main-page {
+    min-height: 100vh;
+  
+    .content {
+      display: flex;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+      gap: 32px; /* Добавим промежуток между секциями */
+  
+      .sidebar {
+        width: 240px;
+        background: #E5E7EB;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+  
+        .menu-item {
+          padding: 12px;
+          background: #D1D5DB;
+          color: #1F2937;
+          border-radius: 8px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 500;
+          transition: background-color 0.2s ease;
+  
+          &.active {
+            background: #9CA3AF;
+            font-weight: 600;
+          }
+  
+          &:hover {
+            background: #9CA3AF;
+          }
+        }
+  
+        .menu-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+          margin-top: 16px;
+  
+          .action-button {
+            padding: 12px 24px;
+            background-color: #DC2626;
+            border: none;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+  
+            &:hover {
+              background-color: #B91C1C;
+              transform: translateY(-1px);
+            }
+  
+            &:active {
+              transform: translateY(0);
+            }
+          }
+        }
+      }
+  
+      .main-section {
+        flex: 1;
+        background: #E5E7EB;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+        .section-header {
+          background: #DC2626;
+          color: #FFFFFF;
+          padding: 12px 16px;
+          font-size: 18px;
+          font-weight: 600;
+          border-radius: 8px;
+          margin-bottom: 16px;
+        }
+  
+        .meeting-content {
+          display: flex;
+          flex-direction: column; /* Изменим на вертикальное расположение */
+          gap: 16px;
+  
+          .meeting-item,
+          .meeting-details {
+            background: #F3F4F6;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1F2937;
+            line-height: 1.5;
+          }
+  
+          .meeting-details {
+            border-left: 4px solid #DC2626; /* Добавим акцентную линию */
+          }
+  
+          .meeting-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end; /* Выровняем кнопки вправо */
+  
+            .action-button {
+              padding: 8px 16px;
+              background: #DC2626;
+              color: #FFFFFF;
+              border: none;
+              border-radius: 8px;
+              cursor: pointer;
+              font-size: 14px;
+              font-weight: 500;
+              transition: background-color 0.2s ease;
+  
+              &:hover {
+                background: #B91C1C;
+              }
+            }
+          }
+        }
+      }
+  
+      .today-section {
+        width: 280px;
+        background: #E5E7EB;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  
+        .today-header {
+          background: #DC2626;
+          color: #FFFFFF;
+          text-align: center;
+          padding: 12px;
+          font-size: 18px;
+          font-weight: 600;
+          border-radius: 8px;
+        }
+  
+        .meetings {
+          margin-top: 16px;
+  
+          .meeting {
+            background: #F3F4F6;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1F2937;
+            margin-bottom: 12px;
+            line-height: 1.5;
+            border-left: 4px solid #DC2626; /* Добавим акцентную линию */
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 1024px) {
+      .content {
+        flex-direction: column;
+        padding: 20px;
+        gap: 20px;
+  
+        .sidebar,
+        .today-section {
+          width: 100%;
+          margin: 0;
+        }
+  
+        .main-section {
+          margin: 0;
+        }
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .content {
+        padding: 16px;
+      }
+    }
+.button-panel{
+    background-color: #c6c6c6;
+}
+  }
