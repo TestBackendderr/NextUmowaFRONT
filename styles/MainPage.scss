@@ -1,190 +1,326 @@
 .main-page {
-    min-height: 100vh;
-  
-    .content {
+  min-height: 100vh;
+  background: #fff;
+  padding: 30px 0;
+
+  .content {
+    display: flex;
+    padding: 50px;
+    max-width: 1600px;
+    margin: 0 auto;
+    gap: 40px;
+    align-items: stretch;
+  }
+
+  /* Стили для левой части (Sidebar) */
+  .sidebar {
+    width: 650px;
+    height: 650px;
+    background: #E5E7EB;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .menu-item {
+      padding: 16px;
+      background: #D1D5DB;
+      color: #1F2937;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+
+      &.active {
+        background: #9CA3AF;
+        font-weight: 600;
+      }
+
+      &:hover {
+        background: #9CA3AF;
+      }
+    }
+
+    .menu-buttons {
       display: flex;
-      padding: 40px;
-      max-width: 1200px;
-      margin: 0 auto;
-      gap: 32px; /* Добавим промежуток между секциями */
-  
-      .sidebar {
-        width: 240px;
-        background: #E5E7EB;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 20px;
+
+      .action-button {
+        padding: 16px 30px;
+        background-color: #DC2626;
+        border: none;
+        color: #FFFFFF;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+
+        &:hover {
+          background-color: #B91C1C;
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+  .sidebar2{
+    width: 650px;
+    height: 650px;
+    background: #E5E7EB;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .menu-item {
+      padding: 16px;
+      background: #D1D5DB;
+      color: #1F2937;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 500;
+      transition: background-color 0.2s ease;
+
+      &.active {
+        background: #9CA3AF;
+        font-weight: 600;
+      }
+
+      &:hover {
+        background: #9CA3AF;
+      }
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 20px;
+
+      .action-button {
+        padding: 16px 30px;
+        background-color: #DC2626;
+        border: none;
+        color: #FFFFFF;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 10px;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+
+        &:hover {
+          background-color: #B91C1C;
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  /* Стили для центральной части (Main Section) */
+  .main-section {
+    width: 650px;
+    height: 650px;
+    background: #E5E7EB;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+
+    .section-header {
+      background: #DC2626;
+      color: #FFFFFF;
+      padding: 16px 20px;
+      font-size: 24px;
+      font-weight: 600;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .meeting-content {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      .meeting-item,
+      .meeting-details {
+        background: #F3F4F6;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 16px;
+        color: #1F2937;
+        line-height: 1.6;
+        border-left: 6px solid #DC2626;
+      }
+
+      .meeting-actions {
         display: flex;
-        flex-direction: column;
-        gap: 16px;
-  
-        .menu-item {
-          padding: 12px;
-          background: #D1D5DB;
-          color: #1F2937;
-          border-radius: 8px;
+        gap: 12px;
+        justify-content: flex-end;
+
+        .action-button {
+          padding: 12px 20px;
+          background: #DC2626;
+          color: #FFFFFF;
+          border: none;
+          border-radius: 10px;
           cursor: pointer;
-          font-size: 14px;
+          font-size: 16px;
           font-weight: 500;
           transition: background-color 0.2s ease;
-  
-          &.active {
-            background: #9CA3AF;
-            font-weight: 600;
-          }
-  
+
           &:hover {
-            background: #9CA3AF;
-          }
-        }
-  
-        .menu-buttons {
-          display: flex;
-          flex-direction: column;
-          gap: 12px;
-          margin-top: 16px;
-  
-          .action-button {
-            padding: 12px 24px;
-            background-color: #DC2626;
-            border: none;
-            color: #FFFFFF;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-  
-            &:hover {
-              background-color: #B91C1C;
-              transform: translateY(-1px);
-            }
-  
-            &:active {
-              transform: translateY(0);
-            }
-          }
-        }
-      }
-  
-      .main-section {
-        flex: 1;
-        background: #E5E7EB;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  
-        .section-header {
-          background: #DC2626;
-          color: #FFFFFF;
-          padding: 12px 16px;
-          font-size: 18px;
-          font-weight: 600;
-          border-radius: 8px;
-          margin-bottom: 16px;
-        }
-  
-        .meeting-content {
-          display: flex;
-          flex-direction: column; /* Изменим на вертикальное расположение */
-          gap: 16px;
-  
-          .meeting-item,
-          .meeting-details {
-            background: #F3F4F6;
-            padding: 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #1F2937;
-            line-height: 1.5;
-          }
-  
-          .meeting-details {
-            border-left: 4px solid #DC2626; /* Добавим акцентную линию */
-          }
-  
-          .meeting-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end; /* Выровняем кнопки вправо */
-  
-            .action-button {
-              padding: 8px 16px;
-              background: #DC2626;
-              color: #FFFFFF;
-              border: none;
-              border-radius: 8px;
-              cursor: pointer;
-              font-size: 14px;
-              font-weight: 500;
-              transition: background-color 0.2s ease;
-  
-              &:hover {
-                background: #B91C1C;
-              }
-            }
-          }
-        }
-      }
-  
-      .today-section {
-        width: 280px;
-        background: #E5E7EB;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  
-        .today-header {
-          background: #DC2626;
-          color: #FFFFFF;
-          text-align: center;
-          padding: 12px;
-          font-size: 18px;
-          font-weight: 600;
-          border-radius: 8px;
-        }
-  
-        .meetings {
-          margin-top: 16px;
-  
-          .meeting {
-            background: #F3F4F6;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 14px;
-            color: #1F2937;
-            margin-bottom: 12px;
-            line-height: 1.5;
-            border-left: 4px solid #DC2626; /* Добавим акцентную линию */
+            background: #B91C1C;
           }
         }
       }
     }
-  
-    @media (max-width: 1024px) {
-      .content {
-        flex-direction: column;
-        padding: 20px;
-        gap: 20px;
-  
-        .sidebar,
-        .today-section {
-          width: 100%;
-          margin: 0;
-        }
-  
-        .main-section {
-          margin: 0;
-        }
-      }
-    }
-  
-    @media (max-width: 768px) {
-      .content {
-        padding: 16px;
-      }
-    }
-.button-panel{
-    background-color: #c6c6c6;
-}
   }
+
+  /* Стили для правой части (Today Section) */
+  .today-section {
+    width: 650px; /* Увеличим ширину до размера левой панели */
+    height: 650px; /* Увеличим высоту до размера левой панели */
+    background: #E5E7EB; /* Серый фон, как у левой панели */
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+
+    
+
+    .today-header {
+      background: #DC2626;
+      color: #FFFFFF;
+      padding: 20px;
+      font-size: 28px;
+      font-weight: 700;
+      border-radius: 10px 10px 0 0;
+      text-align: center;
+      text-transform: uppercase;
+      margin: -30px -30px 20px -30px;
+    }
+
+    .meetings {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding-right: 10px;
+
+      .meeting {
+        background: rgba(243, 244, 246, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 16px;
+        color: #1F2937;
+        margin-bottom: 20px;
+        line-height: 1.6;
+        border-left: 6px solid #DC2626;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease;
+
+        &:hover {
+          transform: translateX(5px);
+        }
+      }
+    }
+    
+
+    .button-panel {
+      display: flex;
+      gap: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #DC2626;
+      background-color: gray;
+
+      button {
+        flex: 1;
+        padding: 16px 40px;
+        background: linear-gradient(90deg, #DC2626, #B91C1C);
+        border: none;
+        color: #FFFFFF;
+        font-size: 18px;
+        font-weight: 600;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.1s ease;
+
+        &:hover {
+          background: linear-gradient(90deg, #B91C1C, #991B1B);
+          transform: translateY(-2px);
+        }
+
+        &:active {
+          transform: translateY(0);
+        }
+      }
+    }
+  }
+
+  /* Адаптивность */
+  @media (max-width: 1200px) {
+    .content {
+      flex-direction: column;
+      padding: 30px;
+      gap: 30px;
+
+      .sidebar,
+      .main-section,
+      .today-section {
+        width: 100%;
+        height: auto;
+        margin: 0;
+      }
+    }
+
+    .today-section .button-panel {
+      flex-direction: column;
+      gap: 15px;
+
+      button {
+        width: 100%;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      padding: 20px;
+    }
+
+    .sidebar,
+    .main-section,
+    .today-section {
+      padding: 20px;
+    }
+
+    .today-section .button-panel {
+      flex-direction: column;
+      gap: 10px;
+
+      button {
+        width: 100%;
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+    }
+  }
+}

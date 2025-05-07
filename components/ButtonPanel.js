@@ -1,24 +1,20 @@
 import { useRouter } from 'next/router';
 
 
-export default function ButtonPanel() {
+export default function Sidebar2() {
   const router = useRouter();
 
   return (
-    <div className="button-panel">
-      <div className="panel-header">NA DZIŚAJ</div>
-      <div className="meetings">
-        <div className="meeting">Spotkanie z Telecentru 08:30 - Mierzwice 30d</div>
-        <div className="meeting">Spotkanie z stotorka 10:30 - Łowicz 30</div>
-        <div className="meeting">Rozmowa z Zabka 12:00 - Łowicz 21</div>
-        <div className="meeting">Podpisanie z Biedronka 12:30 - Natulowicza 28</div>
+    <aside className="sidebar2">
+      <div className="section-header">Na dzisiaj</div>
+      <div className="menu-item">Lista kontaktów</div>
+      <div className="menu-item active">Lista spotkań</div>
+      <div className="menu-item">Lista ofert</div>
+      <div className="menu-item">Lista umów</div>
+      <div className="menu-buttons">
+        <button onClick={() => router.push('/utworz-umowy')} className="action-button">Na dzisiaj</button>
+        <button onClick={() => router.push('/lista-umow')} className="action-button">Na jutro</button>
       </div>
-      <div className="panel-actions">
-        <button className="action-button">Dziśaj</button>
-        <button className="action-button">Jutro</button>
-        <button className="action-button">Pojutrze</button>
-        <button className="action-button">Plus 3 dni</button>
-      </div>
-    </div>
+    </aside>
   );
 }

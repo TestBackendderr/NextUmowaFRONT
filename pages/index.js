@@ -1,4 +1,4 @@
-import Sidebar from '../components/SideBar';
+import Sidebar from '../components/Sidebar';
 import MainSection from '../components/MainSection';
 import ButtonPanel from '../components/ButtonPanel';
 

@@ -4,7 +4,9 @@ export default function Sidebar() {
   const router = useRouter();
 
   return (
+    
     <aside className="sidebar">
+      
       <div className="menu-item">Lista kontaktów</div>
       <div className="menu-item active">Lista spotkań</div>
       <div className="menu-item">Lista ofert</div>
