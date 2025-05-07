@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-
+// import './UmowyLista.scss';
 
 const UmowyLista = ({ initialUmowy = [] }) => {
   const [umowy, setUmowy] = useState(initialUmowy);

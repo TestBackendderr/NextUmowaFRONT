@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-
 const UtworzUmowy = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -60,8 +59,9 @@ const UtworzUmowy = () => {
     powierzchniaDomu: '',
     uwagiHandlowca: '',
     banerZamontowany: '',
-    handlowiecWynagrodzenie: ''
+    handlowiecWynagrodzenie: '',
   });
+  const [error, setError] = useState(''); // Для отображения ошибок
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,24 +72,64 @@ const UtworzUmowy = () => {
   const prevStep = () => setStep(prev => prev - 1);
 
   const handleSubmit = async () => {
-    console.log('Отправляемые данные:', formData);
+    // Определяем числовые поля
+    const numericFields = [
+      'telefon',
+      'tel2',
+      'kontaktowyTel',
+      'peselNip',
+      'cenaBrutto',
+      'pierwszaWplata',
+      'drugaWplata',
+      'powierzchniaDomu',
+      'mocPrzylaczeniowa',
+      'zabezpieczenie',
+      'numerLicznika',
+      'numerPpm',
+    ];
+
+    // Преобразуем данные перед отправкой
+    const dataToSend = { ...formData };
+
+    // Проверяем и преобразуем числовые поля
+    for (const field of numericFields) {
+      if (dataToSend[field] === '') {
+        dataToSend[field] = null; // Если поле пустое, отправляем null
+      } else if (!isNaN(dataToSend[field])) {
+        dataToSend[field] = Number(dataToSend[field]); // Преобразуем в число
+      } else {
+        setError(`Pole ${field} musi być liczbą.`);
+        return;
+      }
+    }
+
+    console.log('Отправляемые данные:', dataToSend);
+
     try {
-      const response = await axios.post('/api/umowy', formData, {
+      const response = await axios.post('/api/umowy', dataToSend, {
         headers: {
-          'Content-Type': 'application/json'
-        }
+          'Content-Type': 'application/json',
+        },
       });
       alert(`Dane zapisane! ID umowy: ${response.data.id}`);
     } catch (error) {
-      console.error('Błąd podczas zapisywania danych:', error.response ? error.response.data : error.message);
-      alert('Błąd podczas zapisywania danych. Sprawdź консолę.');
+      const errorMsg = error.response ? error.response.data : error.message;
+      console.error('Błąd podczas zapisywania danych:', errorMsg);
+      setError(`Błąd podczas zapisywania danych: ${errorMsg.message || errorMsg}`);
     }
   };
 
   useEffect(() => {
-    if (step === 3 && formData.adresImie && formData.adresUlica && formData.adresNrDomu && 
-        formData.adresMiejscowosc && formData.adresKodPocztowy && formData.adresPowiat && 
-        formData.adresWojewodztwo) {
+    if (
+      step === 5 &&
+      formData.adresImie &&
+      formData.adresUlica &&
+      formData.adresNrDomu &&
+      formData.adresMiejscowosc &&
+      formData.adresKodPocztowy &&
+      formData.adresPowiat &&
+      formData.adresWojewodztwo
+    ) {
       setFormData(prev => ({
         ...prev,
         miUlica: prev.miUlica || prev.adresUlica,
@@ -97,30 +137,50 @@ const UtworzUmowy = () => {
         miMiejscowosc: prev.miMiejscowosc || prev.adresMiejscowosc,
         miKod: prev.miKod || prev.adresKodPocztowy,
         miPowiat: prev.miPowiat || prev.adresPowiat,
-        miWojewodztwo: prev.miWojewodztwo || prev.adresWojewodztwo
+        miWojewodztwo: prev.miWojewodztwo || prev.adresWojewodztwo,
       }));
     }
-  }, [step, formData.adresImie, formData.adresUlica, formData.adresNrDomu, 
-      formData.adresMiejscowosc, formData.adresKodPocztowy, formData.adresPowiat, 
-      formData.adresWojewodztwo]);
+  }, [
+    step,
+    formData.adresImie,
+    formData.adresUlica,
+    formData.adresNrDomu,
+    formData.adresMiejscowosc,
+    formData.adresKodPocztowy,
+    formData.adresPowiat,
+    formData.adresWojewodztwo,
+  ]);
 
   return (
     <div className="utworz-umowy">
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       {step === 1 && (
         <div className="form-step">
           <h2>Ogólne</h2>
           <label>Handlowiec:</label>
-          <select name="handlowiec" value={formData.handlowiec} onChange={handleChange}>
+          <select name="handlowiec" value={formData.handlowiec} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="Bartek Test">Bartek Test</option>
             <option value="Marcin Test">Marcin Test</option>
           </select>
 
           <label>Data podpisania umowy:</label>
-          <input type="date" name="dataPodpisania" value={formData.dataPodpisania} onChange={handleChange} />
+          <input
+            type="date"
+            name="dataPodpisania"
+            value={formData.dataPodpisania}
+            onChange={handleChange}
+            required
+          />
 
           <label>Numer umowy:</label>
-          <input type="text" name="numerUmowy" value={formData.numerUmowy} onChange={handleChange} />
+          <input
+            type="text"
+            name="numerUmowy"
+            value={formData.numerUmowy}
+            onChange={handleChange}
+            required
+          />
 
           <div className="button-container">
             <button onClick={nextStep}>Dalej</button>
@@ -133,51 +193,105 @@ const UtworzUmowy = () => {
           <h2>Dane Klienta</h2>
           <div className="sub-panel">
             <label>Imię i nazwisko:</label>
-            <input type="text" name="imieNazwisko" value={formData.imieNazwisko} onChange={handleChange} />
+            <input
+              type="text"
+              name="imieNazwisko"
+              value={formData.imieNazwisko}
+              onChange={handleChange}
+              required
+            />
 
             <label>Telefon:</label>
-            <input type="text" name="telefon" value={formData.telefon} onChange={handleChange} />
+            <input
+              type="text"
+              name="telefon"
+              value={formData.telefon}
+              onChange={handleChange}
+              pattern="\d*"
+              title="Proszę wpisać tylko cyfry"
+              required
+            />
 
             <label>Ulica:</label>
-            <input type="text" name="ulica" value={formData.ulica} onChange={handleChange} />
+            <input type="text" name="ulica" value={formData.ulica} onChange={handleChange} required />
 
             <label>Miejscowość:</label>
-            <input type="text" name="miejscowosc" value={formData.miejscowosc} onChange={handleChange} />
+            <input
+              type="text"
+              name="miejscowosc"
+              value={formData.miejscowosc}
+              onChange={handleChange}
+              required
+            />
 
             <label>Kod pocztowy:</label>
-            <input type="text" name="kodPocztowy" value={formData.kodPocztowy} onChange={handleChange} />
+            <input
+              type="text"
+              name="kodPocztowy"
+              value={formData.kodPocztowy}
+              onChange={handleChange}
+              required
+            />
 
             <label>Powiat:</label>
-            <input type="text" name="powiat" value={formData.powiat} onChange={handleChange} />
+            <input type="text" name="powiat" value={formData.powiat} onChange={handleChange} required />
 
             <label>Województwo:</label>
-            <input type="text" name="wojewodztwo" value={formData.wojewodztwo} onChange={handleChange} />
+            <input
+              type="text"
+              name="wojewodztwo"
+              value={formData.wojewodztwo}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <label>Rodzaj klienta:</label>
-          <select name="rodzajKlienta" value={formData.rodzajKlienta} onChange={handleChange}>
+          <select name="rodzajKlienta" value={formData.rodzajKlienta} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="Osoba fizyczna">Osoba fizyczna</option>
             <option value="Działalność gospodarcza">Działalność gospodarcza</option>
           </select>
 
           <label>Pesel/NIP:</label>
-          <input type="text" name="peselNip" value={formData.peselNip} onChange={handleChange} />
+          <input
+            type="text"
+            name="peselNip"
+            value={formData.peselNip}
+            onChange={handleChange}
+            pattern="\d*"
+            title="Proszę wpisać tylko cyfry"
+            required
+          />
 
           <label>Seria i numer dowodu osobistego:</label>
           <input type="text" name="dowod" value={formData.dowod} onChange={handleChange} />
 
           <label>Numer telefonu:</label>
-          <input type="text" name="tel2" value={formData.tel2} onChange={handleChange} />
+          <input
+            type="text"
+            name="tel2"
+            value={formData.tel2}
+            onChange={handleChange}
+            pattern="\d*"
+            title="Proszę wpisać tylko cyfry"
+          />
 
           <label>Numer telefonu kontaktowy:</label>
-          <input type="text" name="kontaktowyTel" value={formData.kontaktowyTel} onChange={handleChange} />
+          <input
+            type="text"
+            name="kontaktowyTel"
+            value={formData.kontaktowyTel}
+            onChange={handleChange}
+            pattern="\d*"
+            title="Proszę wpisać tylko cyfry"
+          />
 
           <label>Adres email:</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
+          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
 
           <label>Operator OSD:</label>
-          <select name="operatorOsd" value={formData.operatorOsd} onChange={handleChange}>
+          <select name="operatorOsd" value={formData.operatorOsd} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="PGE Dystrybucja">PGE Dystrybucja</option>
             <option value="Tauron Dystrybucja">Tauron Dystrybucja</option>
@@ -188,14 +302,21 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Czy właściciel instalacji jest właścicielem licznika?</label>
-          <select name="czyWlascicielLicznika" value={formData.czyWlascicielLicznika} onChange={handleChange}>
+          <select
+            name="czyWlascicielLicznika"
+            value={formData.czyWlascicielLicznika}
+            onChange={handleChange}
+            required
+          >
             <option value="">-- Wybierz --</option>
             <option value="tak">Tak</option>
             <option value="nie">Nie</option>
           </select>
 
           <div className="button-container">
-            <button className="btn-back" onClick={prevStep}>Wróć</button>
+            <button className="btn-back" onClick={prevStep}>
+              Wróć
+            </button>
             <button onClick={nextStep}>Dalej</button>
           </div>
         </div>
@@ -205,28 +326,48 @@ const UtworzUmowy = () => {
         <div className="form-step">
           <h2>Adres korespondencyjny</h2>
           <label>Imię nazwisko / Dane firmy:</label>
-          <input type="text" name="adresImie" value={formData.adresImie} onChange={handleChange} />
+          <input type="text" name="adresImie" value={formData.adresImie} onChange={handleChange} required />
 
           <label>Ulica:</label>
-          <input type="text" name="adresUlica" value={formData.adresUlica} onChange={handleChange} />
+          <input type="text" name="adresUlica" value={formData.adresUlica} onChange={handleChange} required />
 
           <label>Nr domu:</label>
-          <input type="text" name="adresNrDomu" value={formData.adresNrDomu} onChange={handleChange} />
+          <input type="text" name="adresNrDomu" value={formData.adresNrDomu} onChange={handleChange} required />
 
           <label>Miejscowość:</label>
-          <input type="text" name="adresMiejscowosc" value={formData.adresMiejscowosc} onChange={handleChange} />
+          <input
+            type="text"
+            name="adresMiejscowosc"
+            value={formData.adresMiejscowosc}
+            onChange={handleChange}
+            required
+          />
 
           <label>Kod pocztowy:</label>
-          <input type="text" name="adresKodPocztowy" value={formData.adresKodPocztowy} onChange={handleChange} />
+          <input
+            type="text"
+            name="adresKodPocztowy"
+            value={formData.adresKodPocztowy}
+            onChange={handleChange}
+            required
+          />
 
           <label>Powiat:</label>
-          <input type="text" name="adresPowiat" value={formData.adresPowiat} onChange={handleChange} />
+          <input type="text" name="adresPowiat" value={formData.adresPowiat} onChange={handleChange} required />
 
           <label>Województwo:</label>
-          <input type="text" name="adresWojewodztwo" value={formData.adresWojewodztwo} onChange={handleChange} />
+          <input
+            type="text"
+            name="adresWojewodztwo"
+            value={formData.adresWojewodztwo}
+            onChange={handleChange}
+            required
+          />
 
           <div className="button-container">
-            <button className="btn-back" onClick={prevStep}>Wróć</button>
+            <button className="btn-back" onClick={prevStep}>
+              Wróć
+            </button>
             <button onClick={nextStep}>Dalej</button>
           </div>
         </div>
@@ -236,14 +377,21 @@ const UtworzUmowy = () => {
         <div className="form-step">
           <h2>Istniejąca instalacja</h2>
           <label>Czy klient już posiada instalację?</label>
-          <select name="czyPosiadaInstalacje" value={formData.czyPosiadaInstalacje} onChange={handleChange}>
+          <select
+            name="czyPosiadaInstalacje"
+            value={formData.czyPosiadaInstalacje}
+            onChange={handleChange}
+            required
+          >
             <option value="">-- Wybierz --</option>
             <option value="tak">Tak</option>
             <option value="nie">Nie</option>
           </select>
 
           <div className="button-container">
-            <button className="btn-back" onClick={prevStep}>Wróć</button>
+            <button className="btn-back" onClick={prevStep}>
+              Wróć
+            </button>
             <button onClick={nextStep}>Dalej</button>
           </div>
         </div>
@@ -253,7 +401,7 @@ const UtworzUmowy = () => {
         <div className="form-step">
           <h2>Oferta</h2>
           <label>Miejsce instalacji:</label>
-          <select name="miejsceInstalacji" value={formData.miejsceInstalacji} onChange={handleChange}>
+          <select name="miejsceInstalacji" value={formData.miejsceInstalacji} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="Adres klienta">Adres klienta</option>
             <option value="Adres korespondencyjny">Adres korespondencyjny</option>
@@ -261,25 +409,25 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Ulica (miejsce instalacji):</label>
-          <input type="text" name="miUlica" value={formData.miUlica} onChange={handleChange} />
+          <input type="text" name="miUlica" value={formData.miUlica} onChange={handleChange} required />
 
           <label>Nr domu:</label>
-          <input type="text" name="miNrDomu" value={formData.miNrDomu} onChange={handleChange} />
+          <input type="text" name="miNrDomu" value={formData.miNrDomu} onChange={handleChange} required />
 
           <label>Miejscowość:</label>
-          <input type="text" name="miMiejscowosc" value={formData.miMiejscowosc} onChange={handleChange} />
+          <input type="text" name="miMiejscowosc" value={formData.miMiejscowosc} onChange={handleChange} required />
 
           <label>Kod pocztowy:</label>
-          <input type="text" name="miKod" value={formData.miKod} onChange={handleChange} />
+          <input type="text" name="miKod" value={formData.miKod} onChange={handleChange} required />
 
           <label>Powiat:</label>
-          <input type="text" name="miPowiat" value={formData.miPowiat} onChange={handleChange} />
+          <input type="text" name="miPowiat" value={formData.miPowiat} onChange={handleChange} required />
 
           <label>Województwo:</label>
-          <input type="text" name="miWojewodztwo" value={formData.miWojewodztwo} onChange={handleChange} />
+          <input type="text" name="miWojewodztwo" value={formData.miWojewodztwo} onChange={handleChange} required />
 
           <label>Miejsce montażu instalacji:</label>
-          <select name="miejsceMontazu" value={formData.miejsceMontazu} onChange={handleChange}>
+          <select name="miejsceMontazu" value={formData.miejsceMontazu} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="Dach budynku mieszkalnego">Dach budynku mieszkalnego</option>
             <option value="Dach garażu">Dach garażu</option>
@@ -291,7 +439,7 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Instalacja fotowoltaiczna podzielona na ilość łańcuchów:</label>
-          <select name="lancuchy" value={formData.lancuchy} onChange={handleChange}>
+          <select name="lancuchy" value={formData.lancuchy} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -299,7 +447,7 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Lokalizacja licznika:</label>
-          <select name="licznikLokalizacja" value={formData.licznikLokalizacja} onChange={handleChange}>
+          <select name="licznikLokalizacja" value={formData.licznikLokalizacja} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="w budynku mieszkalnym w środku">w budynku mieszkalnym w środku</option>
             <option value="na zewnątrz">na zewnątrz</option>
@@ -308,7 +456,7 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Czy klient posiada zasięg internetu w miejscu montażu falownika?</label>
-          <select name="zasiegInternetu" value={formData.zasiegInternetu} onChange={handleChange}>
+          <select name="zasiegInternetu" value={formData.zasiegInternetu} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="wifi">WiFi</option>
             <option value="ethernet">Ethernet</option>
@@ -316,7 +464,7 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Czy w miejscu montażu falownika zasięg min. 2 kreski?</label>
-          <select name="dwieKreski" value={formData.dwieKreski} onChange={handleChange}>
+          <select name="dwieKreski" value={formData.dwieKreski} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="tak">Tak</option>
             <option value="nie">Nie</option>
@@ -329,13 +477,23 @@ const UtworzUmowy = () => {
           <input type="text" name="numerDzialki" value={formData.numerDzialki} onChange={handleChange} />
 
           <label>Moc przyłączeniowa:</label>
-          <input type="text" name="mocPrzylaczeniowa" value={formData.mocPrzylaczeniowa} onChange={handleChange} />
+          <input
+            type="number"
+            name="mocPrzylaczeniowa"
+            value={formData.mocPrzylaczeniowa}
+            onChange={handleChange}
+          />
 
           <label>Zabezpieczenie przedlicznikowe:</label>
-          <input type="text" name="zabezpieczenie" value={formData.zabezpieczenie} onChange={handleChange} />
+          <input
+            type="number"
+            name="zabezpieczenie"
+            value={formData.zabezpieczenie}
+            onChange={handleChange}
+          />
 
           <label>Ilu fazowa instalacja?</label>
-          <select name="fazowa" value={formData.fazowa} onChange={handleChange}>
+          <select name="fazowa" value={formData.fazowa} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="jednofazowa">Jednofazowa</option>
             <option value="trójfazowa">Trójfazowa</option>
@@ -345,13 +503,29 @@ const UtworzUmowy = () => {
           <input type="text" name="taryfa" value={formData.taryfa} onChange={handleChange} />
 
           <label>Numer licznika:</label>
-          <input type="text" name="numerLicznika" value={formData.numerLicznika} onChange={handleChange} />
+          <input
+            type="text"
+            name="numerLicznika"
+            value={formData.numerLicznika}
+            onChange={handleChange}
+            pattern="\d*"
+            title="Proszę wpisać tylko cyfry"
+          />
 
           <label>Numer PPM lub PPE:</label>
-          <input type="text" name="numerPpm" value={formData.numerPpm} onChange={handleChange} />
+          <input
+            type="text"
+            name="numerPpm"
+            value={formData.numerPpm}
+            onChange={handleChange}
+            pattern="\d*"
+            title="Proszę wpisać tylko cyfry"
+          />
 
           <div className="button-container">
-            <button className="btn-back" onClick={prevStep}>Wróć</button>
+            <button className="btn-back" onClick={prevStep}>
+              Wróć
+            </button>
             <button onClick={nextStep}>Dalej</button>
           </div>
         </div>
@@ -361,13 +535,25 @@ const UtworzUmowy = () => {
         <div className="form-step">
           <h2>Płatność</h2>
           <label>Cena brutto:</label>
-          <input type="number" name="cenaBrutto" value={formData.cenaBrutto} onChange={handleChange} />
+          <input
+            type="number"
+            name="cenaBrutto"
+            value={formData.cenaBrutto}
+            onChange={handleChange}
+            required
+          />
 
           <label>1. wpłata (kwota brutto):</label>
-          <input type="number" name="pierwszaWplata" value={formData.pierwszaWplata} onChange={handleChange} />
+          <input
+            type="number"
+            name="pierwszaWplata"
+            value={formData.pierwszaWplata}
+            onChange={handleChange}
+            required
+          />
 
           <label>Sposób płatności:</label>
-          <select name="sposobPlatnosci1" value={formData.sposobPlatnosci1} onChange={handleChange}>
+          <select name="sposobPlatnosci1" value={formData.sposobPlatnosci1} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="przelew">Przelew</option>
             <option value="kredyt">Kredyt</option>
@@ -377,19 +563,30 @@ const UtworzUmowy = () => {
           </select>
 
           <label>Brak 2. wpłaty, klient wpłaca wszystko w 1.?</label>
-          <select name="czyJednaWplata" value={formData.czyJednaWplata} onChange={handleChange}>
+          <select name="czyJednaWplata" value={formData.czyJednaWplata} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="tak">Tak</option>
             <option value="nie">Nie</option>
           </select>
 
-          {formData.czyJednaWplata === "nie" && (
+          {formData.czyJednaWplata === 'nie' && (
             <>
               <label>2. wpłata (kwota brutto):</label>
-              <input type="number" name="drugaWplata" value={formData.drugaWplata} onChange={handleChange} />
+              <input
+                type="number"
+                name="drugaWplata"
+                value={formData.drugaWplata}
+                onChange={handleChange}
+                required
+              />
 
               <label>Sposób płatności 2. wpłaty:</label>
-              <select name="sposobPlatnosci2" value={formData.sposobPlatnosci2} onChange={handleChange}>
+              <select
+                name="sposobPlatnosci2"
+                value={formData.sposobPlatnosci2}
+                onChange={handleChange}
+                required
+              >
                 <option value="">-- Wybierz --</option>
                 <option value="przelew">Przelew</option>
                 <option value="kredyt">Kredyt</option>
@@ -401,10 +598,18 @@ const UtworzUmowy = () => {
           )}
 
           <label>Powierzchnia domu (m²):</label>
-          <input type="number" name="powierzchniaDomu" value={formData.powierzchniaDomu} onChange={handleChange} />
+          <input
+            type="number"
+            name="powierzchniaDomu"
+            value={formData.powierzchniaDomu}
+            onChange={handleChange}
+            required
+          />
 
           <div className="button-container">
-            <button className="btn-back" onClick={prevStep}>Wróć</button>
+            <button className="btn-back" onClick={prevStep}>
+              Wróć
+            </button>
             <button onClick={nextStep}>Dalej</button>
           </div>
         </div>
@@ -417,21 +622,28 @@ const UtworzUmowy = () => {
           <textarea name="uwagiHandlowca" value={formData.uwagiHandlowca} onChange={handleChange} />
 
           <label>Czy został zamontowany baner w miejscu montażu?</label>
-          <select name="banerZamontowany" value={formData.banerZamontowany} onChange={handleChange}>
+          <select name="banerZamontowany" value={formData.banerZamontowany} onChange={handleChange} required>
             <option value="">-- Wybierz --</option>
             <option value="tak">Tak</option>
             <option value="nie">Nie</option>
           </select>
 
           <label>Handlowiec do wynagrodzenia:</label>
-          <select name="handlowiecWynagrodzenie" value={formData.handlowiecWynagrodzenie} onChange={handleChange}>
+          <select
+            name="handlowiecWynagrodzenie"
+            value={formData.handlowiecWynagrodzenie}
+            onChange={handleChange}
+            required
+          >
             <option value="">-- Wybierz --</option>
             <option value="Bartek Test">Bartek Test</option>
             <option value="Marcin Test">Marcin Test</option>
           </select>
 
           <div className="button-container">
-            <button className="btn-back" onClick={prevStep}>Wróć</button>
+            <button className="btn-back" onClick={prevStep}>
+              Wróć
+            </button>
             <button onClick={handleSubmit}>Zakończ</button>
           </div>
         </div>
